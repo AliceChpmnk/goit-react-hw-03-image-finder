@@ -49,12 +49,12 @@ state = {
         }
     }
     
-    onLoadMoreBtnClick = () => {
-        API.getPicturesByName(this.state.query, this.state.page)
-                .then(pictures => {
-                    this.setState({ pictures: [this.state.pictures, ...pictures], page: this.state.page + 1 })})
-                .catch(error => this.setState({ error, status: Status.REJECTED }));
-    }
+    // onLoadMoreBtnClick = () => {
+    //     API.getPicturesByName(this.state.query, this.state.page)
+    //             .then(pictures => {
+    //                 this.setState({ pictures: [this.state.pictures, ...pictures], page: this.state.page + 1 })})
+    //             .catch(error => this.setState({ error, status: Status.REJECTED }));
+    // }
         
     render() {
         const { pictures, status } = this.state;
@@ -78,7 +78,7 @@ state = {
                         return <ImageGalleryItem key={id} webformatURL={webformatURL} largeImageURL={largeImageURL} />
                     })}
                     </ul>
-                <LoadMoreButton onClick={this.onLoadMoreBtnClick} />
+                {/* <LoadMoreButton onClick={this.onLoadMoreBtnClick} /> */}
                 </>)
         }
   }
