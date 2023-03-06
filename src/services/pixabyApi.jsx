@@ -13,6 +13,6 @@ export const getPicturesByName = async (name, page) => {
         orientation: 'horizontal',
         safesearch: 'true',
     })
-    const response = await axios(`?${options}`);
-    return response.data.hits;
+    const {data} = await axios(`?${options}`);
+    return data;
 }
