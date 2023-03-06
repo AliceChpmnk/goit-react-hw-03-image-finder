@@ -1,7 +1,10 @@
+import React, { Component } from 'react';
 import {LoadMoreButton} from 'components/Button/Button';
 import {ImageGalleryItem} from 'components/ImageGalleryItem/ImageGalleryItem';
-import React, { Component } from 'react';
+import { Loader } from 'components/Loader/Loader';
 import * as API from 'services/pixabyApi';
+import PropTypes from 'prop-types';
+import css from '../../styles.module.css';
 
 const Status = {
   IDLE: 'idle',
@@ -17,7 +20,11 @@ state = {
     page: 1,
     error: null,
     status: Status.IDLE,
-}
+    }
+    
+    static propTypes = {
+        query: PropTypes.string,
+    }
 
     componentDidUpdate(prevProps, prevState) {
         const prevQuery = prevProps.query;
@@ -34,52 +41,38 @@ state = {
         //     finally {console.log(this.state.status); console.log(this.state.pictures);}
         // }
         
-        if (prevQuery !== nextQuery) {
+        if (prevQuery !== nextQuery || prevPage !== nextPage) {
             this.setState({ status: Status.PENDING });
             this.setState({ query: nextQuery });
             // fetchPictures();
-            API.getPicturesByName(nextQuery, this.state.page)
+            API.getPicturesByName(nextQuery, nextPage)
                 .then(pictures => {
-                    this.setState({ pictures, page: this.state.page + 1, status: Status.RESOLVED })})
+                    this.setState({ pictures: [...this.state.pictures, ...pictures], status: Status.RESOLVED })})
                 .catch(error => this.setState({ error, status: Status.REJECTED }));
-        }
-
-        if (prevPage !== nextPage) {
-            console.log(nextPage);
         }
     }
     
-    // onLoadMoreBtnClick = () => {
-    //     API.getPicturesByName(this.state.query, this.state.page)
-    //             .then(pictures => {
-    //                 this.setState({ pictures: [this.state.pictures, ...pictures], page: this.state.page + 1 })})
-    //             .catch(error => this.setState({ error, status: Status.REJECTED }));
-    // }
+    onLoadMoreBtnClick = () => {
+        this.setState({ page: this.state.page + 1 });
+    }
         
     render() {
-        const { pictures, status } = this.state;
-
-        if (status === 'idle') {
-        return <div>Enter something to search pictures</div>;
-        }
-
-        if (status === 'pending') {
-            return <div>Loading...</div>;
-        }
-
+        const { pictures, status, query } = this.state;
+        
         if (status === 'rejected') {
-        return <div>Oooops</div>;
+        return <div>Oooops, something went wrong :( Try reloading the page.</div>;
         }
 
-        if (status === 'resolved') {
-            return (<>
-                    <ul>
-                        {pictures.map(({ id, webformatURL, largeImageURL }) => {
-                        return <ImageGalleryItem key={id} webformatURL={webformatURL} largeImageURL={largeImageURL} />
+        if (status === 'pending' || status === 'resolved') {
+        return <>
+            {pictures.length > 0 &&
+                <ul className={css.ImageGallery}>
+                {pictures.map(({ id, webformatURL, largeImageURL }) => {
+                    return <ImageGalleryItem key={id} webformatURL={webformatURL} largeImageURL={largeImageURL} alt={query} />
                     })}
-                    </ul>
-                {/* <LoadMoreButton onClick={this.onLoadMoreBtnClick} /> */}
-                </>)
+                </ul>}
+                {status === 'pending' ? <Loader /> : <LoadMoreButton onClick={this.onLoadMoreBtnClick} /> }
+        </>
         }
   }
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import Searchbar from './Searchbar/Searchbar';
+import css from '../styles.module.css';
 
 export default class App extends Component {
 
@@ -14,7 +15,7 @@ export default class App extends Component {
 
   render() {
     return (
-      <div>
+      <div className={css.App}>
         <Searchbar onSubmit={this.onSubmit} />
         <ImageGallery query={this.state.query} />
       </div>
