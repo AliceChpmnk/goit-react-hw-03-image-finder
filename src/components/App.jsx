@@ -32,7 +32,7 @@ export default class App extends Component {
         query: PropTypes.string,
   }
   
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(_, prevState) {
         const prevQuery = prevState.query;
         const nextQuery = this.state.query;
         const prevPage = prevState.page;
@@ -66,7 +66,7 @@ export default class App extends Component {
   }
 
   render() {
-    const { pictures, total, page, status, query, islastPage } = this.state;
+    const { pictures, status, query, islastPage } = this.state;
 
     return (
       <div className={css.App}>
