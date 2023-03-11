@@ -37,10 +37,6 @@ export default class App extends Component {
         const nextQuery = this.state.query;
         const prevPage = prevState.page;
         const nextPage = this.state.page;
-    
-    if (prevQuery !== nextQuery) {
-      this.setState({ pictures: [], page: 1, islastPage: false });
-    }
         
     if (prevQuery !== nextQuery || prevPage !== nextPage) {
       this.setState({ status: Status.PENDING });
@@ -62,7 +58,7 @@ export default class App extends Component {
     }
 
   onSubmit = (query) => {
-    this.setState({ query });
+    this.setState({ query, pictures: [], page: 1, islastPage: false });
   }
 
   render() {
